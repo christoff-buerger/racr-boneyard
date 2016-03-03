@@ -18,3 +18,5 @@
 **/cjava-*.jar
 # Ignore profiling measurements:
 **/measurements
+# Ignore unpacked archives:
+invasive-composition/original-case-study-by-Марта-Тасић/racr-jastadd-isc-case-study/
