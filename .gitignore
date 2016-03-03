@@ -15,5 +15,6 @@
 **/obj
 # Ignore generated Java Archives:
 **/tinycpp-*.jar
+**/cjava-*.jar
 # Ignore profiling measurements:
 **/measurements
