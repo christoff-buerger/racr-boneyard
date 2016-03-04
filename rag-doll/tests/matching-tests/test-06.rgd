@@ -1,0 +1,21 @@
+Petrinet
+3
+Glueing->outport-inport
+InPort:Port->
+OutPort:Port->
+Token->value
+Port->place
+Arc->place-functionlabel
+Place->name-Token*
+Transition->name-Arc*<In-Arc*<Out
+Petrinet->issubnet
+AtomicPetrinet:Petrinet->name-Place*-Transition*-Port*
+ComposedPetrinet:Petrinet->Petrinet<Net1-Petrinet<Net2-Glueing*
+
+
+
+((0 "" 0 0 1 0 "" ()) (1 "" 0 1 2 1 "" ()) (7 "" 1 1 3 2 "" ()) (3 "T=>Petrinet" 1 1 4 2 "" ()) (2 "" 1 1 5 2 "" ()))
+
+(("" (255 255 255)) ("*" (200 200 200)) ("Arc" (214 37 114)) ("AtomicPetrinet" (108 6 144)) ("ComposedPetrinet" (166 137 199)) ("Glueing" (247 178 195)) ("InPort" (85 223 32)) ("OutPort" (53 103 86)) ("Petrinet" (75 38 13)) ("Place" (15 185 183)) ("Port" (96 235 6)) ("Token" (103 194 212)) ("Transition" (84 147 160)))
+
+((1 . "") (2 . "") (3 . "") (7 . ""))
