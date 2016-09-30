@@ -1,4 +1,4 @@
-This branch contains the results of the internship of _Марта Тасић_ at
+This directory contains the results of the internship of _Марта Тасић_ at
 
 > Lehrstuhl Softwaretechnologie,
 > Institut für Software- und Multimediatechnik,
