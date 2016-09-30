@@ -1,0 +1,3 @@
+This directory contains _Tiny C++_, a toy compiler for a very specialised subset of _C++_ modeling the semantics of inner classes with static methods and fields. Objective of the compiler is to transform such programs to a normalised, non-decomposed representation, where the actual implementations of inner classes are moved to their respective forward declarations, replacing them if the program was well-formed.
+
+Such a weaving of implementations is an invasive software composition. The _Tiny C++_ example therefore is the spiritual successor of [_CJava_](https://github.com/christoff-buerger/racr-boneyard/tree/master/invasive-composition/original-case-study-by-Марта-Тасић).

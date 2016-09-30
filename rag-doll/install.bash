@@ -7,13 +7,13 @@
 
 if [ ! $# == 1 ]
 then
-	echo "Wrong number of arguments - two arguments expected:"
-	echo "	(1) Scheme distribution directory"
+	echo "Wrong number of arguments (one argument expected):"
+	echo "	(1) Racket distribution directory"
 	exit 1
 fi
 if [ ! -d $1 ]
 then
-	echo "The given Scheme distribution directory [$1] does not exist."
+	echo "The given Racket distribution directory [$1] does not exist."
 	exit 2
 fi
 
