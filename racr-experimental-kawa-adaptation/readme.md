@@ -51,6 +51,6 @@ The adaptations done are:
  * transformation of *R6RS* library syntax to *R7RS/Kawa* syntax
  * transformation of *R6RS* record definitions to *SRFI 9* records (as supported by *Kawa*)
  * uncommenting of `with-specification` definition (required because *Kawa's* `define-syntax` implementation is incomplete)
- * split of `specify-ag-rule` and separation of its nested `specify-attribute*` macro in an own definition (again, because *Kawa's* `define-syntax` was erroneous)
+ * split of `specify-ag-rule` and separation of its nested `specify-attribute*` macro in an own definition (again, because *Kawa's* `define-syntax` is erroneous)
  * deletion of everything related to pattern attributes (to reduce necessary adaptations)
 
