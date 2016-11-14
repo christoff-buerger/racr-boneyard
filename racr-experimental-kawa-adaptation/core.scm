@@ -5,6 +5,7 @@
 
 (define-library
   (racr core)
+
   (export
    ; Specification interface:
    (rename make-racr-specification create-specification)
@@ -79,11 +80,19 @@
    ast-annotation?
    ast-annotation
    ; Support
-   ;with-specification
+   with-specification
    with-bindings
    ; Utility interface:
    (rename error-object? racr-exception?))
-  (import (scheme base) (rnrs hashtables)); (rnrs) (rnrs mutable-pairs))
+
+  (import
+   (scheme base)
+   (scheme case-lambda)
+   (scheme char)
+   (scheme write)
+   (rnrs lists)
+   (rnrs hashtables)
+   (kawa base))
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Internal Data Structures ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -134,7 +143,7 @@
     (specification ast-rule-specification)
     (as-symbol ast-rule-as-symbol)
     (production ast-rule-production ast-rule-production-set!)
-    (supertype? ast-rule-supertype? ast-rule-supertype-set!))
+    (supertype? ast-rule-supertype? ast-rule-supertype?-set!))
   
   ; INTERNAL FUNCTION: Given an AST rule find a certain child context by name. If the rule defines no such
   ; context, return #f, otherwise the production symbol defining the respective context.
@@ -173,12 +182,12 @@
   ; of certain type) or not, a context-name unambiguously referencing it within the production it is part of
   ; and a list of attributes defined for it.
   (define-record-type symbol
-    (make-production-symbol name ast-rule non-terminal? klenee? context-name attributes)
+    (make-production-symbol name ast-rule non-terminal? kleene? context-name attributes)
     production-symbol?
     (name symbol-name)
     (ast-rule symbol-ast-rule)
     (non-terminal? symbol-non-terminal? symbol-non-terminal?-set!)
-    (klenee? symbol-klenee?)
+    (kleene? symbol-kleene?)
     (context-name symbol-context-name)
     (attributes symbol-attributes symbol-attributes-set!))
   
@@ -193,7 +202,7 @@
     (make-attribute-definition name context equation circularity-definition cached?)
     attribute-definition?
     (name attribute-definition-name)
-    (context attribute-definition-contex)
+    (context attribute-definition-context)
     (equation attribute-definition-equation)
     (circularity-definition attribute-definition-circularity-definition)
     (cached? attribute-definition-cached?))
@@ -366,11 +375,9 @@
   ; representation of it using display.
   (define object->string
     (lambda (x)
-      (call-with-string-output-port
+      (call-with-output-string
        (lambda (port)
          (display x port)))))
- 
-  ;(define-condition-type racr-exception &violation make-racr-exception racr-exception?)
  
   ; INTERNAL FUNCTION: Given an arbitrary sequence of strings and other Scheme entities, concatenate them to
   ; form an error message and throw a special RACR exception with the constructed message. Any entity that is
@@ -386,16 +393,6 @@
            (if (string? m-part*)
                m-part*
                (string-append "[" (object->string m-part*) "]"))) ...)))))
-  ;(raise-continuable
-  ; (condition
-  ;  (make-racr-exception)
-  ;  (make-message-condition
-  ;   (string-append
-  ;    "RACR exception: "
-  ;    (let ((m-part* m-part))
-  ;      (if (string? m-part*)
-  ;          m-part*
-  ;          (string-append "[" (object->string m-part*) "]"))) ...)))))))
  
   ; INTERNAL FUNCTION: Procedure sequentially applying a function on all the AST rules of a set of rules which
   ; inherit, whereby supertypes are processed before their subtypes.
@@ -420,34 +417,34 @@
             (func to-resolve) ; ...process it and...
             (loop (cons to-resolve resolved) (remq to-resolve to-check))))))) ; ...recur.
  
-  #|(define-syntax with-specification
-   (lambda (x)
-     (syntax-case x ()
-       ((k spec body ...)
-        #`(let* ((spec* spec)
-                 (#,(datum->syntax #'k 'ast-rule)
-                  (lambda (rule)
-                    (specify-ast-rule spec* rule)))
-                 (#,(datum->syntax #'k 'compile-ast-specifications)
-                  (lambda (start-symbol)
-                    (compile-ast-specifications spec* start-symbol)))
-                 (#,(datum->syntax #'k 'compile-ag-specifications)
-                  (lambda ()
-                    (compile-ag-specifications spec*)))
-                 (#,(datum->syntax #'k 'create-ast)
-                  (lambda (rule children)
-                    (create-ast spec* rule children)))
-                 (#,(datum->syntax #'k 'specification->phase)
-                  (lambda ()
-                    (specification->phase spec*)))
-                 (#,(datum->syntax #'k 'specify-attribute)
-                  (lambda (att-name non-terminal index cached? equation circ-def)
-                    (specify-attribute spec* att-name non-terminal index cached? equation circ-def))))
-            (let-syntax ((#,(datum->syntax #'k 'ag-rule)
-                          (syntax-rules ()
-                            ((_ attribute-name definition (... ...))
-                             (specify-ag-rule spec* attribute-name definition (... ...))))))
-              body ...))))))|#
+  (define-syntax with-specification
+    (lambda (x)
+      (syntax-case x ()
+        ((k spec body ...)
+         #`(let* ((spec* spec)
+                  (#,(datum->syntax #'k 'ast-rule)
+                   (lambda (rule)
+                     (specify-ast-rule spec* rule)))
+                  (#,(datum->syntax #'k 'compile-ast-specifications)
+                   (lambda (start-symbol)
+                     (compile-ast-specifications spec* start-symbol)))
+                  (#,(datum->syntax #'k 'compile-ag-specifications)
+                   (lambda ()
+                     (compile-ag-specifications spec*)))
+                  (#,(datum->syntax #'k 'create-ast)
+                   (lambda (rule children)
+                     (create-ast spec* rule children)))
+                  (#,(datum->syntax #'k 'specification->phase)
+                   (lambda ()
+                     (specification->phase spec*)))
+                  (#,(datum->syntax #'k 'specify-attribute)
+                   (lambda (att-name non-terminal index cached? equation circ-def)
+                     (specify-attribute spec* att-name non-terminal index cached? equation circ-def))))
+             (let-syntax ((#,(datum->syntax #'k 'ag-rule)
+                           (syntax-rules ()
+                             ((_ attribute-name definition (... ...))
+                              (specify-ag-rule spec* attribute-name definition (... ...))))))
+               body ...))))))
  
   (define-syntax with-bindings
     (syntax-rules ()
