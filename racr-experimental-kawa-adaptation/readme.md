@@ -1,6 +1,6 @@
 # Experimental *Kawa* adaptation of *RACR*
 
-The `core.scm` contained in this *zip* archive is an **experimental** adaptation of *RACR's* `(racr core)` library for [*Kawa*](https://www.gnu.org/software/kawa/). It is compiling with *Kawa 2.2*, the most recent version on the 15th of November 2016.
+The `core.scm` contained in this directory is an **experimental** adaptation of *RACR's* `(racr core)` library for [*Kawa*](https://www.gnu.org/software/kawa/). It is compiling with *Kawa 2.4*.
 
 The adaptations done are:
  * transformation of *R6RS* library syntax to *R7RS/Kawa* syntax

@@ -5,4 +5,4 @@
 
 # author: C. Bürger
 
-kawa --r6rs -d . -C core.scm
+kawa --r6rs -d bin -C core.scm
